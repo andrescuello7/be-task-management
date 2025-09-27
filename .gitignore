@@ -1,0 +1,10 @@
+/user/__pycache__/
+/user/migrations/__pycache__/
+/task/__pycache__/
+/task/migrations/__pycache__/
+/core/__pycache__/
+/core/__pycache__/
+
+db.sqlite3
+venv/
+.env
