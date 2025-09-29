@@ -1,6 +1,6 @@
-# Invera ToDo-List Challenge
+# ToDo-Tasks
 
-ToDo-List Challenge de Invera! Este proyecto es una aplicación web sencilla desarrollada con Python y Django que permite a los usuarios gestionar sus tareas. El objetivo principal es proporcionar una API robusta para la creación, lectura, actualización y eliminación de tareas, junto con funcionalidades de autenticación y filtrado.
+Este proyecto es una aplicación web sencilla desarrollada con Python y Django que permite a los usuarios gestionar sus tareas. El objetivo principal es proporcionar una API robusta para la creación, lectura, actualización y eliminación de tareas, junto con funcionalidades de autenticación y filtrado.
 
 ## Tabla de Contenidos
 
@@ -72,8 +72,8 @@ Asegúrate de tener instalado lo siguiente:
 
 1.  **Clona este repositorio:**
     ```bash
-    git clone https://github.com/andrescuello7/invera-todo-challenge
-    cd invera-todo-challenge
+    git clone https://github.com/andrescuello7/be-task-management
+    cd be-task-management
     ```
 
 2.  **Crea y activa un entorno virtual:**
