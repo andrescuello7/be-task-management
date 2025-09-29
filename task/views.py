@@ -1,10 +1,9 @@
 from .models import Task
 from user.models import AuthToken
-from django.utils.dateparse import parse_date
+from django.utils.dateparse import parse_date, parse_datetime
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import generics, status
-
+from rest_framework import status
 
 def get_user_from_token(request):
     token_key = request.headers.get("Authorization")
@@ -74,6 +73,41 @@ def create_task(request):
     }, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET'])
+def get_filter_search(request):
+    search = request.GET.get("search")
+    date = request.GET.get("date")
+    tasks = Task.objects.all()
+    
+    if not search and not date:
+        return Response({"error": "Debes enviar un Titulo o Fecha"}, status=400)
+
+    if date:
+        tasks = tasks.filter(created_at__gte=parse_date(date))
+
+    if search:
+        tasks = tasks.filter(title__icontains=search)
+    
+    data = [
+        {
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+            "status": t.status,
+            "created_at": t.created_at,
+            "author": {
+                "id": t.author.id,
+                "username": t.author.username,
+                "email": t.author.email,
+                "firstname": t.author.firstname,
+                "lastname": t.author.lastname,
+            },
+        }
+        for t in tasks
+    ]
+    return Response(data)
+    
+    
 @api_view(['GET'])
 def find_task_by_date(request):
     user, error = get_user_from_token(request)

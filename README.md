@@ -259,11 +259,11 @@ Todos los endpoints de tareas requieren autenticación. Incluye el token de acce
 
 #### Filtrar Tareas
 
-El endpoint `/api/tasks/` soporta filtrado por `created_at` y `title`.
+El endpoint `/api/task/search` soporta filtrado por `date` y `search`.
 
 *   **Filtrar por fecha de creación (rango):**
-    *   `GET /api/tasks/?created_at_after=YYYY-MM-DD&created_at_before=YYYY-MM-DD`
-    *   Ejemplo: `GET /api/tasks/?created_at_after=2023-10-01&created_at_before=2023-10-31`
+    *   `GET /api/tasks/?date=YYYY-MM-DD`
+    *   Ejemplo: `GET /api/tasks/?date=2025-09-25`
         *   Filtra tareas creadas entre las fechas especificadas.
 
 *   **Filtrar por contenido (búsqueda parcial en el título):**
@@ -272,7 +272,7 @@ El endpoint `/api/tasks/` soporta filtrado por `created_at` y `title`.
         *   Devuelve tareas cuyo título contenga "compra".
 
 *   **Combinar filtros:**
-    *   `GET /api/tasks/?search=revisar&created_at_after=2023-10-20`
+    *   `GET /api/tasks/?search=revisar&date=2023-10-20`
 
 ## 6. Bonus Implementados
 
