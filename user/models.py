@@ -21,6 +21,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(blank=True, null=True, verbose_name='last login')
     
     objects = UserManager()
 

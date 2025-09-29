@@ -1,16 +1,26 @@
+from user.models import AuthToken
 from .models import Task
 from django.utils.dateparse import parse_date, parse_datetime
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def get_all_tasks(request):
-    tasks = Task.objects.filter(author=request.user).order_by("-created_at")
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
+    tasks = Task.objects.filter(author=user).order_by("-created_at")
     data = [
         {
             "id": t.id,
@@ -29,12 +39,24 @@ def get_all_tasks(request):
         for t in tasks
     ]
     return Response(data)
+    
 
 
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def create_task(request):
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
     title = request.data.get("title")
     description = request.data.get("description")
     status_ = request.data.get("status", "pending")
@@ -46,7 +68,7 @@ def create_task(request):
         title=title,
         description=description,
         status=status_,
-        author=request.user
+        author=user
     )
 
     return Response({
@@ -59,12 +81,23 @@ def create_task(request):
 
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def get_filter_search(request):
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
     search = request.GET.get("search")
     date = request.GET.get("date")
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(author=user)
     
     if not search and not date:
         return Response({"error": "Debes enviar un Titulo o Fecha"}, status=400)
@@ -96,9 +129,20 @@ def get_filter_search(request):
     
     
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def find_task_by_date(request):
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
     date_str = request.data.get("date")
     if not date_str:
         return Response({"error": "Debes enviar una fecha (YYYY-MM-DD)"}, status=400)
@@ -108,7 +152,7 @@ def find_task_by_date(request):
     except Exception:
         return Response({"error": "Formato de fecha inválido"}, status=400)
 
-    tasks = Task.objects.filter(author=request.user, created_at__date=date)
+    tasks = Task.objects.filter(author=user, created_at__date=date)
 
     data = [
         {
@@ -132,15 +176,26 @@ def find_task_by_date(request):
 
 
 @api_view(['PUT'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def change_task(request):
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
     task_id = request.data.get("id")
     if not task_id:
         return Response({"error": "Debes enviar el id de la tarea"}, status=400)
 
     try:
-        task = Task.objects.get(id=task_id, author=request.user)
+        task = Task.objects.get(id=task_id, author=user)
     except Task.DoesNotExist:
         return Response({"error": "Tarea no encontrada"}, status=404)
 
@@ -159,15 +214,26 @@ def change_task(request):
 
 
 @api_view(['DELETE'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def delete_task(request):
+    token_key = request.headers.get("Authorization")
+    if not token_key:
+        return Response({"error": "Token requerido"}, status=401)
+
+    try:
+        # Handle both "Token <key>" and just "<key>" formats
+        if token_key.startswith("Token "):
+            token_key = token_key.replace("Token ", "")
+        token = AuthToken.objects.get(key=token_key)
+    except AuthToken.DoesNotExist:
+        return Response({"error": "Token inválido"}, status=401)
+    
+    user = token.user
     task_id = request.data.get("id")
     if not task_id:
         return Response({"error": "Debes enviar el id de la tarea"}, status=400)
 
     try:
-        task = Task.objects.get(id=task_id, author=request.user)
+        task = Task.objects.get(id=task_id, author=user)
         task.delete()
         return Response({"message": "Tarea eliminada correctamente"})
     except Task.DoesNotExist:

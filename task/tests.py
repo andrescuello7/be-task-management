@@ -18,7 +18,6 @@ class TaskViewsTest(TestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.defaults['HTTP_AUTHORIZATION'] = f'Token {self.token.key}'
 
-        # Crear tarea inicial
         self.task = Task.objects.create(
             title="Tarea de deploy",
             description="Deploy en aws para pruebas de STG",
