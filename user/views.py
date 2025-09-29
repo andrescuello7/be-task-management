@@ -10,8 +10,8 @@ def create_user(request):
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    firstname = request.data.get('firstname')
-    lastname = request.data.get('lastname')
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
 
     if not username or not password:
         return Response({"error": "username y password son obligatorios"}, status=400)
@@ -23,8 +23,8 @@ def create_user(request):
         username=username,
         email=email,
         password=make_password(password),
-        firstname=firstname,
-        lastname=lastname
+        first_name=first_name,
+        last_name=last_name
     )
 
     token = AuthToken.objects.create(user=user)
@@ -64,8 +64,8 @@ def get_user_by_token(request):
         "id": user.id,
         "username": user.username,
         "email": user.email,
-        "firstname": user.firstname,
-        "lastname": user.lastname,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
         "created_at": user.created_at,
     })
 
@@ -90,8 +90,8 @@ def get_all_users(request):
             "id": u.id,
             "username": u.username,
             "email": u.email,
-            "firstname": u.firstname,
-            "lastname": u.lastname,
+            "first_name": u.first_name,
+            "last_name": u.last_name,
             "created_at": u.created_at,
         })
 
