@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from user.models import AuthToken, User
+from rest_framework.authtoken.models import Token
 from task.models import Task
 
 User = get_user_model()
@@ -15,8 +15,8 @@ class TaskViewsTest(TestCase):
             first_name="Andy",
             last_name="Cuello"
         )
-        self.token = AuthToken.objects.create(user_id=self.user)
-        self.client.force_login(self.user)
+        self.token = Token.objects.create(user=self.user)
+        self.client.defaults['HTTP_AUTHORIZATION'] = f'Token {self.token.key}'
 
         # Crear tarea inicial
         self.task = Task.objects.create(
@@ -28,13 +28,13 @@ class TaskViewsTest(TestCase):
         )
 
     def test_get_all_tasks(self):
-        url = "/api/tasks/"
+        url = "/api/tasks/getAll/"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 1)
 
     def test_create_task(self):
-        url = "/api/tasks/"
+        url = "/api/tasks/create/"
         data = {
             "title": "Tarea de deploy",
             "description": "Deploy en aws para pruebas de STG",
@@ -45,7 +45,7 @@ class TaskViewsTest(TestCase):
         self.assertEqual(Task.objects.count(), 2)
 
     def test_filter_by_search(self):
-        url = "/api/tasks/filter/?search=deploy"
+        url = "/api/tasks/search/?search=deploy"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 1)

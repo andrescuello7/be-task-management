@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -13,7 +14,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(models.Model):
+class User(AbstractBaseUser):
     username = models.CharField(max_length=200, unique=True)
     email = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
@@ -28,6 +29,6 @@ class User(models.Model):
 
 
 class AuthToken(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="auth_token")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="custom_auth_token")
     key = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)

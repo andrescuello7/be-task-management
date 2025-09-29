@@ -13,10 +13,10 @@ task_list = TaskViewSet.as_view({
 })
 
 urlpatterns = [
-    path('getAll', get_all_tasks), 
-    path('create', create_task),
-    path('find', find_task_by_date), 
-    path('search', get_filter_search), 
-    path('change', change_task),
-    path('delete', delete_task),
+    path('getAll/', get_all_tasks), 
+    path('create/', create_task),
+    path('find/', find_task_by_date), 
+    path('search/', get_filter_search), 
+    path('change/', change_task),
+    path('delete/', delete_task),
 ]

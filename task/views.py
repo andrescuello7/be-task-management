@@ -1,29 +1,16 @@
 from .models import Task
-from user.models import AuthToken
 from django.utils.dateparse import parse_date, parse_datetime
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-def get_user_from_token(request):
-    token_key = request.headers.get("Authorization")
-    if not token_key:
-        return None, Response({"error": "Token requerido"}, status=401)
-
-    try:
-        token = AuthToken.objects.get(key=token_key.replace("Token ", ""))
-        return token.user, None
-    except AuthToken.DoesNotExist:
-        return None, Response({"error": "Token inválido"}, status=401)
-
-
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_all_tasks(request):
-    user, error = get_user_from_token(request)
-    if error:
-        return error
-
-    tasks = Task.objects.filter(author=user).order_by("-created_at")
+    tasks = Task.objects.filter(author=request.user).order_by("-created_at")
     data = [
         {
             "id": t.id,
@@ -35,8 +22,8 @@ def get_all_tasks(request):
                 "id": t.author.id,
                 "username": t.author.username,
                 "email": t.author.email,
-                "firstname": t.author.firstname,
-                "lastname": t.author.lastname,
+                "first_name": t.author.first_name,
+                "last_name": t.author.last_name,
             },
         }
         for t in tasks
@@ -45,11 +32,9 @@ def get_all_tasks(request):
 
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def create_task(request):
-    user, error = get_user_from_token(request)
-    if error:
-        return error
-
     title = request.data.get("title")
     description = request.data.get("description")
     status_ = request.data.get("status", "pending")
@@ -61,7 +46,7 @@ def create_task(request):
         title=title,
         description=description,
         status=status_,
-        author=user
+        author=request.user
     )
 
     return Response({
@@ -74,6 +59,8 @@ def create_task(request):
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_filter_search(request):
     search = request.GET.get("search")
     date = request.GET.get("date")
@@ -99,8 +86,8 @@ def get_filter_search(request):
                 "id": t.author.id,
                 "username": t.author.username,
                 "email": t.author.email,
-                "firstname": t.author.firstname,
-                "lastname": t.author.lastname,
+                "first_name": t.author.first_name,
+                "last_name": t.author.last_name,
             },
         }
         for t in tasks
@@ -109,11 +96,9 @@ def get_filter_search(request):
     
     
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def find_task_by_date(request):
-    user, error = get_user_from_token(request)
-    if error:
-        return error
-
     date_str = request.data.get("date")
     if not date_str:
         return Response({"error": "Debes enviar una fecha (YYYY-MM-DD)"}, status=400)
@@ -123,7 +108,7 @@ def find_task_by_date(request):
     except Exception:
         return Response({"error": "Formato de fecha inválido"}, status=400)
 
-    tasks = Task.objects.filter(author=user, created_at__date=date)
+    tasks = Task.objects.filter(author=request.user, created_at__date=date)
 
     data = [
         {
@@ -136,8 +121,8 @@ def find_task_by_date(request):
                 "id": t.author.id,
                 "username": t.author.username,
                 "email": t.author.email,
-                "firstname": t.author.firstname,
-                "lastname": t.author.lastname,
+                "first_name": t.author.first_name,
+                "last_name": t.author.last_name,
             },
         }
         for t in tasks
@@ -147,17 +132,15 @@ def find_task_by_date(request):
 
 
 @api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def change_task(request):
-    user, error = get_user_from_token(request)
-    if error:
-        return error
-
     task_id = request.data.get("id")
     if not task_id:
         return Response({"error": "Debes enviar el id de la tarea"}, status=400)
 
     try:
-        task = Task.objects.get(id=task_id, author=user)
+        task = Task.objects.get(id=task_id, author=request.user)
     except Task.DoesNotExist:
         return Response({"error": "Tarea no encontrada"}, status=404)
 
@@ -176,17 +159,15 @@ def change_task(request):
 
 
 @api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_task(request):
-    user, error = get_user_from_token(request)
-    if error:
-        return error
-
     task_id = request.data.get("id")
     if not task_id:
         return Response({"error": "Debes enviar el id de la tarea"}, status=400)
 
     try:
-        task = Task.objects.get(id=task_id, author=user)
+        task = Task.objects.get(id=task_id, author=request.user)
         task.delete()
         return Response({"message": "Tarea eliminada correctamente"})
     except Task.DoesNotExist:
