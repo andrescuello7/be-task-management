@@ -2,6 +2,8 @@
 
 Este proyecto es una aplicación web sencilla desarrollada con Python y Django que permite a los usuarios gestionar sus tareas. El objetivo principal es proporcionar una API robusta para la creación, lectura, actualización y eliminación de tareas, junto con funcionalidades de autenticación y filtrado.
 
+<img width="1439" height="655" alt="Screenshot 2025-09-29 at 9 05 19 PM" src="https://github.com/user-attachments/assets/de0ecc1c-36fe-49d0-84bf-41461f9485ea" />
+
 ## Tabla de Contenidos
 
 1.  [Descripción del Proyecto](#descripción-del-proyecto)
