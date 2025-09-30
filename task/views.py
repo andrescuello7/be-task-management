@@ -12,7 +12,6 @@ def get_all_tasks(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)
@@ -39,7 +38,6 @@ def get_all_tasks(request):
         for t in tasks
     ]
     return Response(data)
-    
 
 
 @api_view(['POST'])
@@ -49,7 +47,6 @@ def create_task(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)
@@ -87,7 +84,6 @@ def get_filter_search(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)
@@ -135,7 +131,6 @@ def find_task_by_date(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)
@@ -182,7 +177,6 @@ def change_task(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)
@@ -220,7 +214,6 @@ def delete_task(request):
         return Response({"error": "Token requerido"}, status=401)
 
     try:
-        # Handle both "Token <key>" and just "<key>" formats
         if token_key.startswith("Token "):
             token_key = token_key.replace("Token ", "")
         token = AuthToken.objects.get(key=token_key)

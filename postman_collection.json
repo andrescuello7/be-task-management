@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "894f9ff3-99c7-470f-b409-47052565d5e2",
+		"_postman_id": "c1991793-fa32-4c73-9c18-770ac426e039",
 		"name": "Invera",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13968689"
@@ -19,7 +19,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"deb.rynki\",\n    \"password\": \"admin1\"\n}",
+							"raw": "{\n    \"username\": \"andy.cuello\",\n    \"password\": \"admin1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -48,7 +48,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
@@ -79,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"andy.rynki\",\n    \"email\": \"andy.rynki@gmail.com\",\n    \"password\": \"admin1\",\n    \"firstname\": \"Andres\",\n    \"lastname\": \"Rynkiewich\"\n}",
+							"raw": "{\n    \"username\": \"andy.cuello\",\n    \"email\": \"andy.cuello@gmail.com\",\n    \"password\": \"admin1\",\n    \"first_name\": \"Andres\",\n    \"last_name\": \"Cuello\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -111,7 +111,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "42128d72-2a92-4b74-bcdd-200f7bf521f3",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
@@ -151,13 +151,18 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Crear API-REST\",\n    \"description\": \"Crear task/ user/ para el servidor\",\n    \"status\": \"TODO\"\n}",
+							"raw": "{\n    \"title\": \"Mi segunda tarea\",\n    \"description\": \"Esta es otra tarea de prueba\",\n    \"status\": \"in_progress\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -165,9 +170,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url-dev}}task/create",
+							"raw": "{{url-dev}}tasks/create",
 							"host": [
-								"{{url-dev}}task"
+								"{{url-dev}}tasks"
 							],
 							"path": [
 								"create"
@@ -186,14 +191,14 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{url-dev}}task/getAll",
+							"raw": "{{url-dev}}tasks/getAll",
 							"host": [
-								"{{url-dev}}task"
+								"{{url-dev}}tasks"
 							],
 							"path": [
 								"getAll"
@@ -203,10 +208,7 @@
 					"response": []
 				},
 				{
-					"name": "find task",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "find by title",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -215,26 +217,23 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"date\": \"2025-09-25\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{url-dev}}task/find",
+							"raw": "{{url-dev}}tasks/search?date=2025-09-29",
 							"host": [
-								"{{url-dev}}task"
+								"{{url-dev}}tasks"
 							],
 							"path": [
-								"find"
+								"search"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2025-09-29"
+								}
 							]
 						}
 					},
@@ -250,13 +249,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 4,\n    \"title\": \"Deploy API-REST\",\n    \"description\": \"Subir el servidor a Railway\",\n    \"status\": \"IN_PROGRESS\"\n}",
+							"raw": "{\n    \"id\": 6,\n    \"title\": \"Deploy API-REST\",\n    \"description\": \"Subir el servidor a Railway\",\n    \"status\": \"IN_PROGRESS\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -264,9 +263,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url-dev}}task/change",
+							"raw": "{{url-dev}}tasks/change",
 							"host": [
-								"{{url-dev}}task"
+								"{{url-dev}}tasks"
 							],
 							"path": [
 								"change"
@@ -285,13 +284,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "874fb401-b5b5-452d-ad57-c8364436da0e",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 4\n}",
+							"raw": "{\n    \"id\": 6\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -299,9 +298,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url-dev}}task/delete",
+							"raw": "{{url-dev}}tasks/delete",
 							"host": [
-								"{{url-dev}}task"
+								"{{url-dev}}tasks"
 							],
 							"path": [
 								"delete"

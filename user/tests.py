@@ -8,6 +8,7 @@ User = get_user_model()
 class UserViewsTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
+            username="andyexample",
             email="andyexample@gmail.com",
             password="admin1",
             first_name="Andy",
@@ -27,7 +28,7 @@ class UserViewsTest(TestCase):
         self.assertIsNotNone(self.token)
 
     def test_user_str_representation(self):
-        expected_str = self.user.email  # Django usa USERNAME_FIELD por defecto
+        expected_str = self.user.email 
         self.assertEqual(str(self.user), expected_str)
 
     def test_user_has_token(self):
@@ -35,9 +36,11 @@ class UserViewsTest(TestCase):
         self.assertEqual(self.user.auth_token, self.token)
 
     def test_user_can_login(self):
-        login_data = {
-            "email": "andyexample@gmail.com",
+        url = "/api/user/auth"
+        data = {
+            "username": "andyexample",
             "password": "admin1"
         }
-        self.assertTrue(self.user.check_password("admin1"))
-
+        response = self.client.post(url, data, content_type="application/json")
+        self.assertTrue(self.user.check_password(data["password"]))
+        self.assertEqual(response.status_code, 200)
